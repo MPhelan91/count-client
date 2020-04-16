@@ -1,0 +1,17 @@
+.food {
+  border: black;
+  border-width: 1px;
+  border-style: solid;
+  p{
+    text-align: left;
+    button{
+      background-color: inherit;
+      border: none;
+      float: right;
+    }
+  }
+}
+
+.food:hover{
+  background-color: #c9f3ff;
+}

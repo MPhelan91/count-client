@@ -1,0 +1,40 @@
+/* Style the tab */
+.dictionary {
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab-header {
+  background-color: inherit;
+  color: black;
+  border: black;
+  padding: 2%;
+  font-size: large;
+  float: left;
+}
+
+/* Change background color of buttons on hover */
+.tab-header:hover {
+  background-color: darkgray;
+}
+
+.tab-content{
+  background-color: lightgray;
+}
+
+.tabs{
+  background-color: gray;
+  overflow: hidden;
+}
+
+.add-button{
+  background-color: inherit;
+  border: none;
+  float: right;
+}
+
+.error-text{
+  color: red;
+  font-weight: bold;
+}

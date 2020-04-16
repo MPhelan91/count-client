@@ -1,0 +1,19 @@
+.food-entry{
+  display: table;
+  div {
+    display: table-row;
+    label{
+      display: table-cell;
+    }
+    input{
+      display: table-cell;
+    }
+    select{
+      display: table-cell;
+    }
+  }
+}
+
+.sbutton{
+  width: 50%;
+}
