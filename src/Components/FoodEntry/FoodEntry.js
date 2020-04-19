@@ -79,7 +79,7 @@ class FoodEntry extends Component{
             onChange={_ => this.handleChange(_, parseInt)}/>
         </div>
       </div>
-      <button className='sbutton' onClick={_=>this.props.onSaveClick(this.getFoodFromForm())}>Save</button>
+      <button className='sbutton' onClick={_=>this.props.onSaveClick(this.getFoodFromForm(), this.props.onServiceResponse)}>Save</button>
       <button className='sbutton' onClick={_=>this.props.closeFoodForm(true)}>Cancel</button>
     </div>);
   }

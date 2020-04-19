@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Food from '../Food/Food';
 import Meal from '../Meal/Meal';
-import axios from 'axios';
+import {DictionaryServiceInstance} from '../../Services/DictionaryService';
 
 import './Dictionary.css';
 import FoodEntry from '../FoodEntry/FoodEntry';
@@ -36,7 +36,7 @@ class Dictionary extends Component {
         servingUnit={food.servingUnit}
         calories={food.calories}
         protien={food.protien} 
-        onDeleteClick={() => this.deleteFood(food.id)} 
+        onDeleteClick={() => DictionaryServiceInstance.deleteFood(food.id, this.handleResponse)} 
         onEditClick={() => this.setState({selectedFood:food})} />;
     });
   }
@@ -52,40 +52,22 @@ class Dictionary extends Component {
     };
   }
 
-  getFoodsServiceCall(){
-    axios.get('https://localhost:44379/api/fooddictionary')
-      .then(response => { this.setState({ foods: response.data }) });
+  setFoodState = (response) => {
+    this.setState({foods: response.data});
   }
 
-  getMealssServiceCall(){
-    axios.get('https://localhost:44379/api/mealdictionary')
-      .then(response => { this.setState({ meals: response.data }) });
+  setMealState = (response) => {
+    this.setState({meals: response.data});
   }
 
   componentDidMount() {
-    this.getFoodsServiceCall();
-    this.getMealssServiceCall();
+    DictionaryServiceInstance.getFoodsServiceCall(this.setFoodState);
+    DictionaryServiceInstance.getMealsServiceCall(this.setMealState);
   }
 
-  editFood = (food) => {
-    axios.put(`https://localhost:44379/api/fooddictionary/${food.id}`,food)
-    .then(response => {this.handleResponse(response.data)});
-  }
-
-  addFood = (food) => {
-    console.log('Heloo');
-    axios.post('https://localhost:44379/api/fooddictionary',food)
-    .then(response => {this.handleResponse(response.data)});
-  }
-
-  deleteFood = (foodId) => {
-    axios.delete(`https://localhost:44379/api/fooddictionary/${foodId}`)
-    .then(response => {this.handleResponse(response.data)});
-  }
-
-  handleResponse(data){
-    if(data.status !== undefined && data.status === 'failure'){
-      this.setState({errorMessage: data.failureMessage})
+  handleResponse = (response) => {
+    if(response.data.status !== undefined && response.data.status === 'failure'){
+      this.setState({errorMessage: response.data.failureMessage})
     }
     else{
       this.closeFoodForm(false);
@@ -96,7 +78,7 @@ class Dictionary extends Component {
     this.setState({selectedFood: undefined});
     this.setState({errorMessage: undefined})
     if(!cancel){
-      this.getFoodsServiceCall();
+      DictionaryServiceInstance.getFoodsServiceCall(this.setFoodState);
     }
   }
 
@@ -132,13 +114,15 @@ class Dictionary extends Component {
     let pageContent = this.state.selectedFood !== undefined && this.state.selectedFood.id > 0
     ? <FoodEntry
         food = {this.state.selectedFood}
-        onSaveClick = {this.editFood}
+        onSaveClick = {DictionaryServiceInstance.editFood}
+        onServiceResponse = {this.handleResponse}
         closeFoodForm={this.closeFoodForm}/>
 
     : this.state.selectedFood !== undefined && this.state.selectedFood.id === 0
     ? <FoodEntry
         food = {this.state.selectedFood}
-        onSaveClick = {this.addFood}
+        onSaveClick = {DictionaryServiceInstance.addFood}
+        onServiceResponse = {this.handleResponse}
         closeFoodForm={this.closeFoodForm}/>
 
     : this.buildDictionary(); 
