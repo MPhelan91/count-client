@@ -6,13 +6,13 @@ import {DictionaryServiceInstance} from '../../Services/DictionaryService';
 import './Dictionary.css';
 import FoodEntry from '../FoodEntry/FoodEntry';
 import { FaPlus } from 'react-icons/fa';
+import MealEntry from '../MealEntry/MealEntry';
 
 class Dictionary extends Component {
   state = {
     foods: [],
     selectedFood: undefined,
     meals: [],
-    showMealModal: false,
     selectedMeal: undefined,
     selectedTab: 'Foods',
     errorMessage: undefined
@@ -21,16 +21,19 @@ class Dictionary extends Component {
   mealsToMealComponents() {
     return this.state.meals.map(meal => {
       return <Meal
+        key={meal.id}
         mealName={meal.mealName}
         calories={meal.calories}
         protien={meal.protien} 
-        onEditClick={() => this.setState({showMealModal: true})}/>;
+        onDeleteClick={() => DictionaryServiceInstance.deleteMeal(meal.id, this.handleResponse)} 
+        onEditClick={() => this.setState({selectedMeal: meal})}/>;
     });
   }
 
   foodsToFoodComponents() {
     return this.state.foods.map(food => {
       return <Food
+        key={food.id}
         foodName={food.foodName}
         servingSize={food.servingSize}
         servingUnit={food.servingUnit}
@@ -39,6 +42,15 @@ class Dictionary extends Component {
         onDeleteClick={() => DictionaryServiceInstance.deleteFood(food.id, this.handleResponse)} 
         onEditClick={() => this.setState({selectedFood:food})} />;
     });
+  }
+
+  newMeal(){
+    return {
+      id: 0,
+      mealName: "",
+      calories: 0,
+      protien: 0,
+    };
   }
 
   newFood(){
@@ -70,7 +82,9 @@ class Dictionary extends Component {
       this.setState({errorMessage: response.data.failureMessage})
     }
     else{
-      this.closeFoodForm(false);
+      this.state.selectedTab === 'Foods'
+      ? this.closeFoodForm(false)
+      : this.closeMealForm(false);
     }
   }
 
@@ -79,6 +93,14 @@ class Dictionary extends Component {
     this.setState({errorMessage: undefined})
     if(!cancel){
       DictionaryServiceInstance.getFoodsServiceCall(this.setFoodState);
+    }
+  }
+
+  closeMealForm = (cancel) =>{
+    this.setState({selectedMeal: undefined});
+    this.setState({errorMessage: undefined})
+    if(!cancel){
+      DictionaryServiceInstance.getMealsServiceCall(this.setMealState);
     }
   }
 
@@ -102,7 +124,14 @@ class Dictionary extends Component {
         <div className='tabs'>
           <button className='tab-header' onClick={_ => this.setState({ selectedTab: 'Foods' })}>Food Library</button>
           <button className='tab-header' onClick={_ => this.setState({ selectedTab: 'Meals' })}>Meal Library</button>
-          <button className='add-button' onClick={_ => this.setState({ selectedFood: this.newFood()})}><FaPlus size='20'/></button>
+          <button className='add-button' onClick={_ => {
+            if(this.state.selectedTab ==='Foods'){
+              this.setState({selectedFood: this.newFood()})
+            }
+            else{
+              this.setState({selectedMeal: this.newMeal()})
+            }
+          }}><FaPlus size='20'/></button>
         </div>
         {tab}
       </div>
@@ -110,20 +139,33 @@ class Dictionary extends Component {
   }
 
   render() {
-    
     let pageContent = this.state.selectedFood !== undefined && this.state.selectedFood.id > 0
     ? <FoodEntry
         food = {this.state.selectedFood}
         onSaveClick = {DictionaryServiceInstance.editFood}
         onServiceResponse = {this.handleResponse}
-        closeFoodForm={this.closeFoodForm}/>
+        closeForm={this.closeFoodForm}/>
 
     : this.state.selectedFood !== undefined && this.state.selectedFood.id === 0
     ? <FoodEntry
         food = {this.state.selectedFood}
         onSaveClick = {DictionaryServiceInstance.addFood}
         onServiceResponse = {this.handleResponse}
-        closeFoodForm={this.closeFoodForm}/>
+        closeForm={this.closeFoodForm}/>
+    
+    : this.state.selectedMeal !== undefined && this.state.selectedMeal.id > 0
+    ? <MealEntry
+        meal={this.state.selectedMeal}
+        onSaveClick = {DictionaryServiceInstance.editMeal}
+        onServiceResponse = {this.handleResponse}
+        closeForm={this.closeMealForm}/>
+    
+    : this.state.selectedMeal !== undefined && this.state.selectedMeal.id === 0
+    ? <MealEntry
+        meal={this.state.selectedMeal}
+        onSaveClick = {DictionaryServiceInstance.addMeal}
+        onServiceResponse = {this.handleResponse}
+        closeForm={this.closeMealForm}/>
 
     : this.buildDictionary(); 
 

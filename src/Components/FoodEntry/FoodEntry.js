@@ -80,7 +80,7 @@ class FoodEntry extends Component{
         </div>
       </div>
       <button className='sbutton' onClick={_=>this.props.onSaveClick(this.getFoodFromForm(), this.props.onServiceResponse)}>Save</button>
-      <button className='sbutton' onClick={_=>this.props.closeFoodForm(true)}>Cancel</button>
+      <button className='sbutton' onClick={_=>this.props.closeForm(true)}>Cancel</button>
     </div>);
   }
 }
