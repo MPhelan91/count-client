@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import Dictionary from './Components/Dictionary/Dictionary'
+import MainPage from './Components/MainPage/MainPage';
 
 function App() {
   return (
     <div className="App">
-      <Dictionary/>
+      <MainPage/>
     </div>
   );
 }

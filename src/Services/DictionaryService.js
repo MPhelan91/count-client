@@ -1,10 +1,11 @@
 
 import axios from 'axios';
+import { CountUri } from './Common';
 
-const foodDictionaryUri = 'https://localhost:44379/api/fooddictionary';
-const mealDictionaryUri = 'https://localhost:44379/api/mealdictionary';
-const foodDictionaryUriFn = (id) => `https://localhost:44379/api/fooddictionary/${id}`;
-const mealDictionaryUriFn = (id) => `https://localhost:44379/api/mealdictionary/${id}`;
+const foodDictionaryUri = CountUri + 'fooddictionary';
+const mealDictionaryUri = CountUri + 'mealdictionary';
+const foodDictionaryUriFn = (id) => CountUri + `fooddictionary/${id}`;
+const mealDictionaryUriFn = (id) => CountUri + `mealdictionary/${id}`;
 
 export class DictionaryService {
   getMealsServiceCall = (onResponse) => {
