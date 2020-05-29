@@ -63,7 +63,7 @@ class CalorieLog extends Component{
     let {counts, addEntryMode, errorMessage} = this.state;
 
     let totals = <div>
-      <p>Total Calories: {counts.calories} || Total Protien: {counts.protien}</p>
+      <p>Total Calories: {counts.calories.toFixed()} || Total Protien: {counts.protien.toFixed()}</p>
     </div>
     let pageContent = addEntryMode ?
       <NewEntry

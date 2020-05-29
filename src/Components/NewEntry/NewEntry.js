@@ -34,12 +34,8 @@ class NewEntry extends Component{
       [event.target.name]: parser(event.target.value)});
   }
 
-  getCaloriesFromMeal(id, meals){
-    return meals.find(meal => meal.id === id).calories;
-  }
-
-  getProtienFromMeal(id, meals){
-    return meals.find(meal => meal.id === id).protien;
+  findItemAndGetProperty(id, list, propName){
+    return list.find(meal => meal.id === id)[propName];
   }
 
   calcNutritionalInfo(food, servingSize, servingUnit){
@@ -80,20 +76,28 @@ class NewEntry extends Component{
       <div>
         <Select label="Saved Foods" isClearable={true} options={foodOptions} value={this.state.selectedFood} onChange={_ => {
             this.calcNutritionalInfo(_, this.state.servingSize, this.state.servingUnit);
-            this.setState({ selectedFood: _, selectedMeal:null});
+            this.setState({
+              selectedFood: _, 
+              selectedMeal:null,
+              servingUnit: _ !== null ? this.findItemAndGetProperty(_.value, this.state.foods, "servingUnit") : 0,  
+              servingSize: _ !== null ? this.findItemAndGetProperty(_.value, this.state.foods, "servingSize") : 0,  
+              calories: _ !== null ? this.findItemAndGetProperty(_.value, this.state.foods, "calories") : 0,  
+              protien: _ !== null ? this.findItemAndGetProperty(_.value, this.state.foods, "protien") : 0,  
+            });
           }}/>
         <Select label="Saved Meals" isClearable={true} options={mealOptions} value={this.state.selectedMeal}  onChange={_ =>
            this.setState({
              selectedMeal: _, 
              selectedFood: null, 
              servingSize: 0,
-             calories: _ !== null ? this.getCaloriesFromMeal(_.value, this.state.meals) : 0, 
-             protien: _ !== null ? this.getProtienFromMeal(_.value, this.state.meals): 0})}/>
+             calories: _ !== null ? this.findItemAndGetProperty(_.value, this.state.meals, "calories") : 0,  
+             protien: _ !== null ? this.findItemAndGetProperty(_.value, this.state.meals, "protien") : 0,  
+             })}/>
       </div>
       <div style={{display:'flex'}}>
-        <input disabled={disableServingEntry} value={this.state.servingSize} name="servingSize" label="Serving" type='number' onChange={_ => {
+        <input step="0.01" disabled={disableServingEntry} value={this.state.servingSize} name="servingSize" label="Serving" type='number' onChange={_ => {
           this.calcNutritionalInfo(this.state.selectedFood, parseInt(_.target.value), this.state.servingUnit);
-          this.handleChange(_, parseInt)}}
+          this.handleChange(_, parseFloat)}}
          />
         <select 
           disabled={disableServingEntry}
