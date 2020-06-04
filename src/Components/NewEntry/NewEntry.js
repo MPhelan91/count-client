@@ -96,7 +96,7 @@ class NewEntry extends Component{
       </div>
       <div style={{display:'flex'}}>
         <input step="0.01" disabled={disableServingEntry} value={this.state.servingSize} name="servingSize" label="Serving" type='number' onChange={_ => {
-          this.calcNutritionalInfo(this.state.selectedFood, parseInt(_.target.value), this.state.servingUnit);
+          this.calcNutritionalInfo(this.state.selectedFood, parseFloat(_.target.value), this.state.servingUnit);
           this.handleChange(_, parseFloat)}}
          />
         <select 

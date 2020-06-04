@@ -39,8 +39,8 @@ class CalorieLog extends Component{
   }
 
   componentDidMount(){
-    CalorieLogServiceInstance.getCalorieLog(this.setEntryState);
-    CalorieLogServiceInstance.getCalorieCounts(this.setCountState);
+    CalorieLogServiceInstance.getCalorieLog(this.setEntryState, new Date());
+    CalorieLogServiceInstance.getCalorieCounts(this.setCountState, new Date());
   }
 
   closeEntryForm = () => {

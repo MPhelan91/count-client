@@ -1,9 +1,10 @@
 
 import axios from 'axios';
 import { CountUri } from './Common';
+var moment = require('moment');
 
-const calorieLogUri = CountUri + 'calorielog/getEntries';
-const calorieCountUri = CountUri + 'calorielog/getCounts';
+const calorieLogUri = (date) => CountUri + `calorielog/getEntries/${date}`;
+const calorieCountUri = (date) => CountUri + `calorielog/getCounts/${date}`;
 const calcNutritionUri = CountUri + 'calorielog/calcNutritionalInfo';
 const addFoodUri = CountUri + 'calorielog/addFoodEntry';
 const addManualUri = CountUri + 'calorielog/addManualEntry';
@@ -12,13 +13,13 @@ const deleteFoodOrManualUri = (id) => CountUri + `calorielog/deleteFoodOrManualE
 const deleteMealUri = (id) => CountUri + `calorielog/deleteMealEntry/${id}`;
 
 export class CalorieLogService {
-  getCalorieLog = (onResponse) => {
-    axios.get(calorieLogUri)
+  getCalorieLog = (onResponse, date) => {
+    axios.get(calorieLogUri(moment(date).format("YYYY-MM-DD")))
       .then(response => onResponse(response));
   }
 
-  getCalorieCounts = (onResponse) => {
-    axios.get(calorieCountUri)
+  getCalorieCounts = (onResponse, date) => {
+    axios.get(calorieCountUri(moment(date).format("YYYY-MM-DD")))
       .then(response => onResponse(response));
   }
 
