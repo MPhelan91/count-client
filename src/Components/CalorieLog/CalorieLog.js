@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import { CalorieLogServiceInstance } from "../../Services/CalorieLogService";
 import CalorieEntry from "../CalorieEntry/CalorieEntry";
 import NewEntry from "../NewEntry/NewEntry";
-import { FaPlus } from 'react-icons/fa';
+import { FaCaretLeft, FaCaretRight, FaPlus } from 'react-icons/fa';
 import '../Dictionary/Dictionary.css';
 import { EntryType } from "../../Types/Enums";
+var moment = require('moment');
 
 class CalorieLog extends Component{
   state = {
@@ -14,7 +15,8 @@ class CalorieLog extends Component{
       protien: 0
     },
     addEntryMode:false,
-    errorMessage: undefined
+    errorMessage: undefined,
+    logDate: new Date()
   }
 
   setEntryState = (response) =>{
@@ -39,8 +41,7 @@ class CalorieLog extends Component{
   }
 
   componentDidMount(){
-    CalorieLogServiceInstance.getCalorieLog(this.setEntryState, new Date());
-    CalorieLogServiceInstance.getCalorieCounts(this.setCountState, new Date());
+    this.loadCalorieLog(this.state.logDate);
   }
 
   closeEntryForm = () => {
@@ -58,9 +59,14 @@ class CalorieLog extends Component{
     }
   }
 
-  render(){
+  loadCalorieLog(date){
+    CalorieLogServiceInstance.getCalorieLog(this.setEntryState, date);
+    CalorieLogServiceInstance.getCalorieCounts(this.setCountState, date);
+  }
 
-    let {counts, addEntryMode, errorMessage} = this.state;
+  render(){
+    let {counts, addEntryMode, errorMessage, logDate} = this.state;
+    let disableRightArrow = logDate.toDateString() === (new Date()).toDateString(); 
 
     let totals = <div>
       <p>Total Calories: {counts.calories.toFixed()} || Total Protien: {counts.protien.toFixed()}</p>
@@ -70,7 +76,20 @@ class CalorieLog extends Component{
         onServiceResponse={this.handleResponse}
         closeForm={this.closeEntryForm}/> :
       <div className='tabs'>
-        <button onClick={()=> this.setState({addEntryMode:true})}><FaPlus size='20'/></button>
+        <div>
+          <button onClick={()=> {
+            let dayBefore = moment(logDate).subtract(1, 'days').toDate();
+            this.setState({logDate: dayBefore});
+            this.loadCalorieLog(dayBefore);
+            }}> <FaCaretLeft size='20'/></button>
+          <input type="date" value={moment(logDate).format("YYYY-MM-DD")}/>
+          <button disabled={disableRightArrow} onClick={()=> {
+            let dayAfter = moment(logDate).add(1, 'days').toDate();
+            this.setState({logDate: dayAfter});
+            this.loadCalorieLog(dayAfter);
+            }}><FaCaretRight size='20'/></button>
+        </div>
+        <button disabled={!disableRightArrow} onClick={()=> this.setState({addEntryMode:true})}><FaPlus size='20'/></button>
         {this.entriesToEntryComponent()}
       </div>
 

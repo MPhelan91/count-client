@@ -15,11 +15,13 @@ const deleteMealUri = (id) => CountUri + `calorielog/deleteMealEntry/${id}`;
 export class CalorieLogService {
   getCalorieLog = (onResponse, date) => {
     axios.get(calorieLogUri(moment(date).format("YYYY-MM-DD")))
+    //axios.get(calorieLogUri("2020-06-03"))
       .then(response => onResponse(response));
   }
 
   getCalorieCounts = (onResponse, date) => {
     axios.get(calorieCountUri(moment(date).format("YYYY-MM-DD")))
+    //axios.get(calorieCountUri("2020-06-03"))
       .then(response => onResponse(response));
   }
 
