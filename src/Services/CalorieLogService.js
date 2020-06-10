@@ -11,6 +11,8 @@ const addManualUri = CountUri + 'calorielog/addManualEntry';
 const addMealUri = CountUri + 'calorielog/addMealEntry';
 const deleteFoodOrManualUri = (id) => CountUri + `calorielog/deleteFoodOrManualEntry/${id}`;
 const deleteMealUri = (id) => CountUri + `calorielog/deleteMealEntry/${id}`;
+const copyFoodEntry = (id) => CountUri + `calorielog/copyFoodEntry/${id}`;
+const copyMealEntry = (id) => CountUri + `calorielog/copyMealEntry/${id}`;
 
 export class CalorieLogService {
   getCalorieLog = (onResponse, date) => {
@@ -28,6 +30,16 @@ export class CalorieLogService {
   calcNutrition = (message, onResponse) => {
     axios.put(calcNutritionUri, message)
       .then(response => onResponse(response));
+  }
+
+  copyFoodEntry = (id, onResponse) => {
+    axios.post(copyFoodEntry(id))
+    .then(response => onResponse(response));
+  }
+
+  copyMealEntry = (id, onResponse) => {
+    axios.post(copyMealEntry(id))
+    .then(response => onResponse(response));
   }
 
   addFoodEntry = (entry, onResponse) => {

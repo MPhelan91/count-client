@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {FaTrashAlt} from 'react-icons/fa'
+import {FaTrashAlt, FaRegCopy} from 'react-icons/fa'
 
 import '../Food/Food.scss';
 
@@ -13,6 +13,7 @@ const calorieEntry = (props) => (
           &nbsp;&nbsp;&nbsp;&nbsp;
           <b>Protien:</b> {props.protien.toFixed()}
           <button onClick={props.onDeleteClick}><FaTrashAlt size='20'/></button>
+          <button onClick={props.onCopyClick}><FaRegCopy size='20'/></button>
         </p>
     </div>
 );
