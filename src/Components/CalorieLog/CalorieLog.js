@@ -33,12 +33,8 @@ class CalorieLog extends Component{
         name = {entry.name}
         calories = {entry.calories}
         protien = {entry.protien}
-        onCopyClick={() => entry.type === EntryType.Meal ?
-          CalorieLogServiceInstance.copyMealEntry(entry.id , this.handleResponse) : 
-          CalorieLogServiceInstance.copyFoodEntry(entry.id, this.handleResponse)} 
-        onDeleteClick={() => entry.type === EntryType.Meal ?
-          CalorieLogServiceInstance.deleteMealEntry(entry.id , this.handleResponse) : 
-          CalorieLogServiceInstance.deleteFoodOrManualEntry(entry.id, this.handleResponse)} 
+        onCopyClick={() => CalorieLogServiceInstance.copyCalorieEntry(entry.id, this.handleResponse)} 
+        onDeleteClick={() => CalorieLogServiceInstance.deleteCalorieEntry(entry.id, this.handleResponse)} 
       />
       })
   }

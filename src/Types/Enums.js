@@ -7,10 +7,4 @@ export const Units = {
     5: 'c',
 }
 
-export const EntryType ={
-  Food: 0,
-  Manual: 1,
-  Meal: 2,
-}
-
 export default Units;

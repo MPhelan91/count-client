@@ -9,21 +9,17 @@ const calcNutritionUri = CountUri + 'calorielog/calcNutritionalInfo';
 const addFoodUri = CountUri + 'calorielog/addFoodEntry';
 const addManualUri = CountUri + 'calorielog/addManualEntry';
 const addMealUri = CountUri + 'calorielog/addMealEntry';
-const deleteFoodOrManualUri = (id) => CountUri + `calorielog/deleteFoodOrManualEntry/${id}`;
-const deleteMealUri = (id) => CountUri + `calorielog/deleteMealEntry/${id}`;
-const copyFoodEntry = (id) => CountUri + `calorielog/copyFoodEntry/${id}`;
-const copyMealEntry = (id) => CountUri + `calorielog/copyMealEntry/${id}`;
+const deleteCalorieEntryUri = (id) => CountUri + `calorielog/deleteCalorieEntry/${id}`;
+const copyCalorieEntryUri = (id) => CountUri + `calorielog/copyCalorieEntry/${id}`;
 
 export class CalorieLogService {
   getCalorieLog = (onResponse, date) => {
     axios.get(calorieLogUri(moment(date).format("YYYY-MM-DD")))
-    //axios.get(calorieLogUri("2020-06-03"))
       .then(response => onResponse(response));
   }
 
   getCalorieCounts = (onResponse, date) => {
     axios.get(calorieCountUri(moment(date).format("YYYY-MM-DD")))
-    //axios.get(calorieCountUri("2020-06-03"))
       .then(response => onResponse(response));
   }
 
@@ -32,13 +28,8 @@ export class CalorieLogService {
       .then(response => onResponse(response));
   }
 
-  copyFoodEntry = (id, onResponse) => {
-    axios.post(copyFoodEntry(id))
-    .then(response => onResponse(response));
-  }
-
-  copyMealEntry = (id, onResponse) => {
-    axios.post(copyMealEntry(id))
+  copyCalorieEntry = (id, onResponse) => {
+    axios.post(copyCalorieEntryUri(id))
     .then(response => onResponse(response));
   }
 
@@ -57,13 +48,8 @@ export class CalorieLogService {
     .then(response => onResponse(response));
   }
 
-  deleteFoodOrManualEntry = (foodEntryId, onResponse) => {
-    axios.delete(deleteFoodOrManualUri(foodEntryId))
-    .then(response => onResponse(response));
-  }
-
-  deleteMealEntry = (mealEntryId, onResponse) => {
-    axios.delete(deleteMealUri(mealEntryId))
+  deleteCalorieEntry = (entryId, onResponse) => {
+    axios.delete(deleteCalorieEntryUri(entryId))
     .then(response => onResponse(response));
   }
 }
