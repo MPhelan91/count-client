@@ -4,12 +4,12 @@ import CalorieEntry from "../CalorieEntry/CalorieEntry";
 import NewEntry from "../NewEntry/NewEntry";
 import { FaCaretLeft, FaCaretRight, FaPlus } from 'react-icons/fa';
 import '../Dictionary/Dictionary.css';
-import { EntryType } from "../../Types/Enums";
 var moment = require('moment');
 
 class CalorieLog extends Component{
   state = {
     entries: [],
+    checkedEntries: [],
     counts:{
       calories: 0,
       protien: 0
@@ -31,8 +31,14 @@ class CalorieLog extends Component{
     return this.state.entries.map(entry => {
       return <CalorieEntry
         name = {entry.name}
+        key = {entry.id}
         calories = {entry.calories}
         protien = {entry.protien}
+        onChecked={(o) => {
+          o.target.checked ?
+            this.setState({checkedEntries: this.state.checkedEntries.concat([entry.id])}) :
+            this.setState({checkedEntries: this.state.checkedEntries.filter(o => o !== entry.id)})}
+        }
         onCopyClick={() => CalorieLogServiceInstance.copyCalorieEntry(entry.id, this.handleResponse)} 
         onDeleteClick={() => CalorieLogServiceInstance.deleteCalorieEntry(entry.id, this.handleResponse)} 
       />
@@ -52,8 +58,8 @@ class CalorieLog extends Component{
       this.setState({errorMessage: response.data.failureMessage})
     }
     else{
-      CalorieLogServiceInstance.getCalorieLog(this.setEntryState, this.state.date);
-      CalorieLogServiceInstance.getCalorieCounts(this.setCountState, this.state.date);
+      CalorieLogServiceInstance.getCalorieLog(this.setEntryState, this.state.logDate);
+      CalorieLogServiceInstance.getCalorieCounts(this.setCountState, this.state.logDate);
       this.closeEntryForm();
     }
   }
@@ -64,7 +70,7 @@ class CalorieLog extends Component{
   }
 
   render(){
-    let {counts, addEntryMode, errorMessage, logDate} = this.state;
+    let {counts, addEntryMode, errorMessage, logDate, checkedEntries} = this.state;
     let disableRightArrow = logDate.toDateString() === (new Date()).toDateString(); 
 
     let totals = <div>
@@ -81,7 +87,7 @@ class CalorieLog extends Component{
             this.setState({logDate: dayBefore});
             this.loadCalorieLog(dayBefore);
             }}> <FaCaretLeft size='20'/></button>
-          <input type="date" value={moment(logDate).format("YYYY-MM-DD")}/>
+          <input type="date" readOnly={true} value={moment(logDate).format("YYYY-MM-DD")}/>
           <button disabled={disableRightArrow} onClick={()=> {
             let dayAfter = moment(logDate).add(1, 'days').toDate();
             this.setState({logDate: dayAfter});
@@ -89,6 +95,7 @@ class CalorieLog extends Component{
             }}><FaCaretRight size='20'/></button>
         </div>
         <button disabled={!disableRightArrow} onClick={()=> this.setState({addEntryMode:true})}><FaPlus size='20'/></button>
+        <button disabled={checkedEntries.length === 0} onClick={() => {}}>Create Meal</button>
         {this.entriesToEntryComponent()}
       </div>
 
